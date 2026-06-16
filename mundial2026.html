@@ -5,43 +5,76 @@
 
 <meta charset="UTF-8">
 
-<title>Mundial FIFA 2026</title>
-
+<title>Widget Mundial FIFA 2026</title>
 
 <style>
 
 body{
 margin:0;
-font-family:Arial;
-background:white;
+font-family:Arial,Helvetica,sans-serif;
+background:transparent;
 }
 
 
-.box{
+.widget{
 
 width:1050px;
 height:250px;
+
+background:#fff;
+
+border-radius:14px;
+
 overflow:hidden;
-border-radius:12px;
-box-shadow:0 3px 15px #999;
+
+box-shadow:0 4px 18px rgba(0,0,0,.25);
+
 }
 
 
-.titulo{
 
-background:#003b7a;
-color:white;
+.cabecera{
 
 height:55px;
 
+background:linear-gradient(90deg,#003b7a,#0084d8);
+
+color:white;
+
 display:flex;
+
 align-items:center;
+
 justify-content:space-between;
 
 padding:0 25px;
 
 font-size:24px;
+
 font-weight:bold;
+
+}
+
+
+.en vivo{
+
+background:#e60000;
+
+}
+
+
+
+.estado{
+
+background:#ffd700;
+
+color:#003b7a;
+
+font-size:13px;
+
+padding:7px 14px;
+
+border-radius:20px;
 
 }
 
@@ -51,7 +84,9 @@ font-weight:bold;
 height:48px;
 
 display:flex;
+
 justify-content:space-between;
+
 align-items:center;
 
 padding:0 25px;
@@ -63,28 +98,53 @@ font-size:17px;
 }
 
 
+
+.equipos{
+
+font-weight:bold;
+
+}
+
+
+
 .hora{
 
 background:#003b7a;
+
 color:white;
 
-padding:7px 15px;
+padding:6px 16px;
 
 border-radius:8px;
 
 }
+
 
 
 .resultado{
 
 background:#198754;
+
 color:white;
 
-padding:7px 15px;
+padding:6px 16px;
 
 border-radius:8px;
 
 }
+
+
+
+.cargando{
+
+text-align:center;
+
+padding-top:70px;
+
+font-size:20px;
+
+}
+
 
 </style>
 
@@ -95,16 +155,18 @@ border-radius:8px;
 <body>
 
 
-<div class="box">
+<div class="widget">
 
 
-<div class="titulo">
+<div class="cabecera">
 
 ⚽ MUNDIAL FIFA 2026
 
-<span>
-FIXTURE
-</span>
+
+<div class="estado">
+ACTUALIZADO
+</div>
+
 
 </div>
 
@@ -112,7 +174,9 @@ FIXTURE
 
 <div id="partidos">
 
+<div class="cargando">
 Cargando partidos...
+</div>
 
 </div>
 
@@ -124,45 +188,65 @@ Cargando partidos...
 <script>
 
 
-fetch(
-"https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json"
-)
+const fuente =
 
-.then(r=>r.json())
+"https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json";
 
 
-.then(data=>{
+
+fetch(fuente+"?v="+Date.now())
+
+.then(res=>res.json())
+
+.then(datos=>{
 
 
-let partidos=data.matches;
+let lista=datos.matches;
 
 
 let html="";
 
 
-partidos.slice(0,5)
+
+lista.slice(0,5)
+
 .forEach(p=>{
 
 
-let marcador="";
+let marcador;
+
 
 
 if(p.score && p.score.ft){
 
+
 marcador=
+
 `
+
 <div class="resultado">
-${p.score.ft[0]} - ${p.score.ft[1]}
+
+${p.score.ft[0]} -
+${p.score.ft[1]}
+
 </div>
+
 `;
+
 
 }else{
 
+
 marcador=
+
 `
+
 <div class="hora">
-${p.time}
+
+${p.time || "Horario"}
+
 </div>
+
 `;
 
 }
@@ -174,7 +258,7 @@ html+=`
 <div class="partido">
 
 
-<div>
+<div class="equipos">
 
 ${p.team1}
 
@@ -192,12 +276,25 @@ ${marcador}
 
 `;
 
+
+
 });
+
 
 
 document.getElementById("partidos")
 .innerHTML=html;
 
+
+})
+
+.catch(()=>{
+
+
+document.getElementById("partidos")
+.innerHTML=
+
+"<div class='cargando'>No se pudo cargar el Mundial</div>";
 
 });
 
