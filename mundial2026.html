@@ -56,13 +56,6 @@ font-weight:bold;
 }
 
 
-.en vivo{
-
-background:#e60000;
-
-}
-
-
 
 .estado{
 
@@ -77,6 +70,7 @@ padding:7px 14px;
 border-radius:20px;
 
 }
+
 
 
 .partido{
@@ -148,7 +142,6 @@ font-size:20px;
 
 </style>
 
-
 </head>
 
 
@@ -164,7 +157,9 @@ font-size:20px;
 
 
 <div class="estado">
-ACTUALIZADO
+
+FIXTURE OFICIAL
+
 </div>
 
 
@@ -175,7 +170,9 @@ ACTUALIZADO
 <div id="partidos">
 
 <div class="cargando">
+
 Cargando partidos...
+
 </div>
 
 </div>
@@ -189,14 +186,51 @@ Cargando partidos...
 
 
 const fuente =
-
 "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json";
+
+
+// Traducción de equipos
+
+function traducir(nombre){
+
+
+const equipos={
+
+"France":"Francia",
+"Senegal":"Senegal",
+"Iraq":"Irak",
+"Iran":"Irán",
+"Norway":"Noruega",
+"Argentina":"Argentina",
+"Algeria":"Argelia",
+"Brazil":"Brasil",
+"Morocco":"Marruecos",
+"Spain":"España",
+"Cape Verde":"Cabo Verde",
+"Austria":"Austria",
+"Jordan":"Jordania",
+"Germany":"Alemania",
+"Italy":"Italia",
+"Portugal":"Portugal",
+"Mexico":"México",
+"USA":"Estados Unidos",
+"Canada":"Canadá"
+
+};
+
+
+return equipos[nombre] || nombre;
+
+
+}
 
 
 
 fetch(fuente+"?v="+Date.now())
 
+
 .then(res=>res.json())
+
 
 .then(datos=>{
 
@@ -204,13 +238,43 @@ fetch(fuente+"?v="+Date.now())
 let lista=datos.matches;
 
 
+// fecha actual
+
+let hoy=new Date();
+
+
+let partidosHoy=lista.filter(p=>{
+
+
+let fecha=new Date(p.date);
+
+
+return fecha.getDate()==hoy.getDate()
+&&
+fecha.getMonth()==hoy.getMonth()
+&&
+fecha.getFullYear()==hoy.getFullYear();
+
+
+});
+
+
+
+// si no encuentra hoy muestra próximos
+
+if(partidosHoy.length===0){
+
+partidosHoy=lista.slice(0,5);
+
+}
+
+
+
 let html="";
 
 
 
-lista.slice(0,5)
-
-.forEach(p=>{
+partidosHoy.forEach(p=>{
 
 
 let marcador;
@@ -226,7 +290,8 @@ marcador=
 
 <div class="resultado">
 
-${p.score.ft[0]} -
+${p.score.ft[0]}
+-
 ${p.score.ft[1]}
 
 </div>
@@ -260,11 +325,11 @@ html+=`
 
 <div class="equipos">
 
-${p.team1}
+${traducir(p.team1)}
 
 <br>
 
-${p.team2}
+${traducir(p.team2)}
 
 </div>
 
@@ -282,21 +347,26 @@ ${marcador}
 
 
 
-document.getElementById("partidos")
+document
+.getElementById("partidos")
 .innerHTML=html;
+
 
 
 })
 
+
 .catch(()=>{
 
 
-document.getElementById("partidos")
+document
+.getElementById("partidos")
 .innerHTML=
 
 "<div class='cargando'>No se pudo cargar el Mundial</div>";
 
 });
+
 
 
 </script>
