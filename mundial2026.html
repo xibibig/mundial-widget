@@ -5,39 +5,43 @@
 
 <meta charset="UTF-8">
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Widget Mundial FIFA 2026</title>
+
 
 <style>
 
 body{
 margin:0;
-font-family:Arial,Helvetica,sans-serif;
 background:transparent;
+font-family:Arial,Helvetica,sans-serif;
 }
 
 
-.widget{
+#wrapper{
 
 width:1050px;
-height:250px;
+max-width:100%;
+margin:auto;
 
-background:#fff;
+background:white;
 
-border-radius:14px;
+border-radius:15px;
 
 overflow:hidden;
 
-box-shadow:0 4px 18px rgba(0,0,0,.25);
+box-shadow:0 5px 25px rgba(0,0,0,.25);
 
 }
 
 
 
-.cabecera{
+.header{
 
-height:55px;
+height:60px;
 
-background:linear-gradient(90deg,#003b7a,#0084d8);
+background:linear-gradient(90deg,#001f4d,#008cff);
 
 color:white;
 
@@ -49,7 +53,7 @@ justify-content:space-between;
 
 padding:0 25px;
 
-font-size:24px;
+font-size:25px;
 
 font-weight:bold;
 
@@ -57,25 +61,23 @@ font-weight:bold;
 
 
 
-.estado{
+.tag{
 
 background:#ffd700;
 
 color:#003b7a;
 
-font-size:13px;
-
-padding:7px 14px;
+padding:7px 15px;
 
 border-radius:20px;
+
+font-size:12px;
 
 }
 
 
 
-.partido{
-
-height:48px;
+.card{
 
 display:flex;
 
@@ -83,30 +85,44 @@ justify-content:space-between;
 
 align-items:center;
 
-padding:0 25px;
+padding:12px 25px;
 
 border-bottom:1px solid #ddd;
 
+}
+
+
+
+.team{
+
 font-size:17px;
 
-}
-
-
-
-.equipos{
 font-weight:bold;
-line-height:18px;
+
+line-height:28px;
+
 }
 
 
 
-.hora{
+.flag{
+
+width:28px;
+vertical-align:middle;
+
+margin-right:6px;
+
+}
+
+
+
+.time{
 
 background:#003b7a;
 
 color:white;
 
-padding:6px 16px;
+padding:8px 15px;
 
 border-radius:8px;
 
@@ -114,474 +130,8 @@ border-radius:8px;
 
 
 
-.resultado{
+.score{
 
 background:#198754;
 
-color:white;
-
-padding:6px 16px;
-
-border-radius:8px;
-
-font-size:15px;
-
-}
-
-
-
-.vivo{
-
-background:#e60000;
-
-color:white;
-
-padding:5px 12px;
-
-border-radius:20px;
-
-font-size:12px;
-
-font-weight:bold;
-
-animation:pulso 1s infinite;
-
-}
-
-
-
-@keyframes pulso{
-
-50%{
-opacity:.5;
-}
-
-}
-
-
-
-.escudo{
-
-width:24px;
-
-height:24px;
-
-vertical-align:middle;
-
-margin-right:5px;
-
-}
-
-
-
-.proximo{
-
-background:#eef5ff;
-
-padding:7px 15px;
-
-font-size:14px;
-
-font-weight:bold;
-
-color:#003b7a;
-
-}
-
-
-
-.cargando{
-
-text-align:center;
-
-padding-top:70px;
-
-font-size:20px;
-
-}
-
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<div class="widget">
-
-
-<div class="cabecera">
-
-⚽ MUNDIAL FIFA 2026
-
-
-<div class="estado">
-
-ACTUALIZADO
-
-</div>
-
-
-</div>
-
-
-
-<div id="partidos">
-
-<div class="cargando">
-
-Cargando partidos...
-
-</div>
-
-</div>
-
-
-</div>
-
-
-
-
-<script>
-
-
-const fuente =
-"https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json";
-
-
-
-
-
-function traducir(nombre){
-
-
-const equipos={
-
-
-"France":"🇫🇷 Francia",
-"Senegal":"🇸🇳 Senegal",
-
-"Iraq":"🇮🇶 Irak",
-"Iran":"🇮🇷 Irán",
-"Norway":"🇳🇴 Noruega",
-
-"Argentina":"🇦🇷 Argentina",
-"Algeria":"🇩🇿 Argelia",
-
-"Brazil":"🇧🇷 Brasil",
-"Morocco":"🇲🇦 Marruecos",
-
-"Spain":"🇪🇸 España",
-"Cape Verde":"🇨🇻 Cabo Verde",
-
-"Austria":"🇦🇹 Austria",
-"Jordan":"🇯🇴 Jordania",
-
-"Germany":"🇩🇪 Alemania",
-"Italy":"🇮🇹 Italia",
-"Portugal":"🇵🇹 Portugal",
-
-"Mexico":"🇲🇽 México",
-
-"USA":"🇺🇸 Estados Unidos",
-"United States":"🇺🇸 Estados Unidos",
-
-"Canada":"🇨🇦 Canadá",
-
-"England":"🏴 Inglaterra",
-"Netherlands":"🇳🇱 Países Bajos",
-"Belgium":"🇧🇪 Bélgica",
-"Croatia":"🇭🇷 Croacia"
-
-};
-
-
-return equipos[nombre.trim()] || nombre;
-
-}
-
-
-
-
-
-function escudo(nombre){
-
-
-let logos={
-
-
-"Argentina":"https://flagcdn.com/w40/ar.png",
-"France":"https://flagcdn.com/w40/fr.png",
-"Brazil":"https://flagcdn.com/w40/br.png",
-"Spain":"https://flagcdn.com/w40/es.png",
-"Germany":"https://flagcdn.com/w40/de.png",
-"Italy":"https://flagcdn.com/w40/it.png",
-"Portugal":"https://flagcdn.com/w40/pt.png",
-"Mexico":"https://flagcdn.com/w40/mx.png",
-"USA":"https://flagcdn.com/w40/us.png",
-"Canada":"https://flagcdn.com/w40/ca.png"
-
-
-};
-
-
-return logos[nombre] || "";
-
-}
-
-
-
-
-function limpiarHorario(hora){
-
-
-if(!hora) return "Horario";
-
-
-return hora
-.replace("UTC-4","")
-.replace("UTC-3","")
-.replace("UTC-5","")
-.trim();
-
-
-}
-
-
-
-
-
-
-
-fetch(fuente+"?v="+Date.now())
-
-
-.then(res=>res.json())
-
-
-.then(datos=>{
-
-
-let lista=datos.matches;
-
-
-
-let ahora=new Date();
-
-
-let fechaActual =
-ahora.getFullYear()+"-"+
-String(ahora.getMonth()+1).padStart(2,"0")+"-"+
-String(ahora.getDate()).padStart(2,"0");
-
-
-
-
-let partidosHoy=lista.filter(p=>{
-
-return p.date.includes(fechaActual);
-
-});
-
-
-
-if(partidosHoy.length===0){
-
-partidosHoy=lista.slice(0,5);
-
-}
-
-
-
-
-let html="";
-
-
-
-
-
-partidosHoy.forEach(p=>{
-
-
-let marcador="";
-
-
-let estado="";
-
-
-
-if(p.status=="LIVE"){
-
-
-estado=
-
-`<div class="vivo">
-🔴 EN VIVO ${p.minute ? p.minute+"'" : ""}
-</div>`;
-
-}
-
-
-
-
-
-if(p.score && p.score.ft){
-
-
-marcador=
-
-`
-
-<div class="resultado">
-
-FINAL<br>
-
-${p.score.ft[0]}
--
-${p.score.ft[1]}
-
-</div>
-
-`;
-
-
-}else{
-
-
-marcador=
-
-`
-
-<div class="hora">
-
-${limpiarHorario(p.time)}
-
-</div>
-
-`;
-
-}
-
-
-
-
-
-html+=`
-
-<div class="partido">
-
-
-<div class="equipos">
-
-
-<img class="escudo" src="${escudo(p.team1)}">
-
-${traducir(p.team1)}
-
-<br>
-
-
-<img class="escudo" src="${escudo(p.team2)}">
-
-${traducir(p.team2)}
-
-
-</div>
-
-
-
-<div>
-
-${estado}
-
-${marcador}
-
-</div>
-
-
-</div>
-
-`;
-
-
-
-});
-
-
-
-
-
-let argentina=lista.find(p=>
-
-p.team1=="Argentina" ||
-p.team2=="Argentina"
-
-);
-
-
-
-if(argentina){
-
-
-html+=`
-
-<div class="proximo">
-
-🇦🇷 Próximo partido Argentina:
-
-${traducir(argentina.team1)}
-vs
-${traducir(argentina.team2)}
-
-</div>
-
-`;
-
-}
-
-
-
-
-
-document
-.getElementById("partidos")
-.innerHTML=html;
-
-
-
-})
-
-
-
-.catch(()=>{
-
-
-document
-.getElementById("partidos")
-.innerHTML=
-
-"<div class='cargando'>No se pudo cargar el Mundial</div>";
-
-});
-
-
-
-
-// ACTUALIZA SOLO CADA 10 MINUTOS
-
-setInterval(()=>{
-
-location.reload();
-
-},600000);
-
-
-
-</script>
-
-
-</body>
-
-</html>
+color:white
