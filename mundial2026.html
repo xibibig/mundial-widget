@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Mundial FIFA 2026</title>
+
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:white;
+}
+
+
+.box{
+
+width:1050px;
+height:250px;
+overflow:hidden;
+border-radius:12px;
+box-shadow:0 3px 15px #999;
+}
+
+
+.titulo{
+
+background:#003b7a;
+color:white;
+
+height:55px;
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+padding:0 25px;
+
+font-size:24px;
+font-weight:bold;
+
+}
+
+
+.partido{
+
+height:48px;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:0 25px;
+
+border-bottom:1px solid #ddd;
+
+font-size:17px;
+
+}
+
+
+.hora{
+
+background:#003b7a;
+color:white;
+
+padding:7px 15px;
+
+border-radius:8px;
+
+}
+
+
+.resultado{
+
+background:#198754;
+color:white;
+
+padding:7px 15px;
+
+border-radius:8px;
+
+}
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="box">
+
+
+<div class="titulo">
+
+⚽ MUNDIAL FIFA 2026
+
+<span>
+FIXTURE
+</span>
+
+</div>
+
+
+
+<div id="partidos">
+
+Cargando partidos...
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+fetch(
+"https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json"
+)
+
+.then(r=>r.json())
+
+
+.then(data=>{
+
+
+let partidos=data.matches;
+
+
+let html="";
+
+
+partidos.slice(0,5)
+.forEach(p=>{
+
+
+let marcador="";
+
+
+if(p.score && p.score.ft){
+
+marcador=
+`
+<div class="resultado">
+${p.score.ft[0]} - ${p.score.ft[1]}
+</div>
+`;
+
+}else{
+
+marcador=
+`
+<div class="hora">
+${p.time}
+</div>
+`;
+
+}
+
+
+
+html+=`
+
+<div class="partido">
+
+
+<div>
+
+${p.team1}
+
+<br>
+
+${p.team2}
+
+</div>
+
+
+${marcador}
+
+
+</div>
+
+`;
+
+});
+
+
+document.getElementById("partidos")
+.innerHTML=html;
+
+
+});
+
+
+</script>
+
+
+</body>
+
+</html>
