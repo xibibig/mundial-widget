@@ -33,7 +33,6 @@ box-shadow:0 5px 20px rgba(0,0,0,.25);
 }
 
 
-
 .header{
 
 height:60px;
@@ -57,6 +56,7 @@ font-weight:bold;
 }
 
 
+
 .tag{
 
 background:#ffd700;
@@ -70,6 +70,7 @@ border-radius:20px;
 font-size:12px;
 
 }
+
 
 
 .match{
@@ -252,8 +253,12 @@ const nombres={
 "Mexico":"🇲🇽 México",
 
 "USA":"🇺🇸 Estados Unidos",
+"United States":"🇺🇸 Estados Unidos",
 
-"Canada":"🇨🇦 Canadá"
+"Canada":"🇨🇦 Canadá",
+
+"England":"🏴 Inglaterra",
+"Netherlands":"🇳🇱 Países Bajos"
 
 };
 
@@ -263,4 +268,256 @@ const banderas={
 
 "Argentina":"ar",
 "France":"fr",
-"Brazil":"br
+"Brazil":"br",
+"Spain":"es",
+"Germany":"de",
+"Portugal":"pt",
+"Mexico":"mx",
+"USA":"us",
+"Canada":"ca"
+
+};
+
+
+
+
+function limpiarHora(h){
+
+if(!h)return "Horario";
+
+return h.replace(/UTC-\d/g,"").trim();
+
+}
+
+
+
+
+function bandera(e){
+
+if(!banderas[e]) return "";
+
+return `
+<img class="flag"
+src="https://flagcdn.com/w40/${banderas[e]}.png">
+`;
+
+}
+
+
+
+
+fetch(fuente+"?v="+Date.now())
+
+
+.then(r=>r.json())
+
+
+.then(data=>{
+
+
+let partidos=data.matches;
+
+
+
+let ahora=new Date();
+
+
+let fecha=
+
+ahora.getFullYear()+"-"+
+String(ahora.getMonth()+1).padStart(2,"0")+"-"+
+String(ahora.getDate()).padStart(2,"0");
+
+
+
+let lista=partidos.filter(p=>
+
+p.date.includes(fecha)
+
+);
+
+
+
+if(lista.length===0){
+
+lista=partidos.slice(0,5);
+
+}
+
+
+
+let html="";
+
+
+
+lista.forEach(p=>{
+
+
+let marcador="";
+
+
+
+if(p.score && p.score.ft){
+
+
+marcador=`
+
+<div class="score">
+
+FINAL<br>
+
+${p.score.ft[0]}
+-
+${p.score.ft[1]}
+
+</div>
+
+`;
+
+
+}else{
+
+
+marcador=`
+
+<div class="time">
+
+${limpiarHora(p.time)}
+
+</div>
+
+`;
+
+}
+
+
+
+
+let vivo="";
+
+
+if(p.status=="LIVE"){
+
+
+vivo=`
+
+<div class="live">
+
+🔴 EN VIVO ${p.minute||""}
+
+</div>
+
+`;
+
+}
+
+
+
+html+=`
+
+<div class="match">
+
+
+<div class="team">
+
+${bandera(p.team1)}
+
+${nombres[p.team1] || p.team1}
+
+<br>
+
+${bandera(p.team2)}
+
+${nombres[p.team2] || p.team2}
+
+</div>
+
+
+<div>
+
+${vivo}
+
+${marcador}
+
+</div>
+
+
+</div>
+
+`;
+
+
+
+});
+
+
+
+
+let argentina=partidos.find(p=>
+
+p.team1=="Argentina" ||
+
+p.team2=="Argentina"
+
+);
+
+
+
+if(argentina){
+
+
+html+=`
+
+<div class="next">
+
+🇦🇷 Próximo partido Argentina:
+
+${nombres[argentina.team1] || argentina.team1}
+
+vs
+
+${nombres[argentina.team2] || argentina.team2}
+
+</div>
+
+`;
+
+}
+
+
+
+document.getElementById("content").innerHTML=html;
+
+
+
+})
+
+
+
+.catch(error=>{
+
+
+document.getElementById("content").innerHTML=
+
+"Error cargando partidos";
+
+});
+
+
+
+// refresca cada 10 minutos
+
+setInterval(()=>{
+
+location.reload();
+
+},600000);
+
+
+
+</script>
+
+
+</body>
+
+</html>
