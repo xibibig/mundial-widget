@@ -55,6 +55,7 @@ font-weight:bold;
 }
 
 
+
 .estado{
 
 background:#ffd700;
@@ -68,6 +69,7 @@ padding:7px 14px;
 border-radius:20px;
 
 }
+
 
 
 .partido{
@@ -89,9 +91,11 @@ font-size:17px;
 }
 
 
+
 .equipos{
 font-weight:bold;
 }
+
 
 
 .hora{
@@ -107,6 +111,7 @@ border-radius:8px;
 }
 
 
+
 .resultado{
 
 background:#198754;
@@ -117,7 +122,10 @@ padding:6px 16px;
 
 border-radius:8px;
 
+font-size:16px;
+
 }
+
 
 
 .cargando{
@@ -129,6 +137,7 @@ padding-top:70px;
 font-size:20px;
 
 }
+
 
 </style>
 
@@ -182,7 +191,6 @@ const fuente =
 
 
 
-// Traducción equipos
 
 function traducir(nombre){
 
@@ -214,18 +222,43 @@ const equipos={
 "Portugal":"🇵🇹 Portugal",
 
 "Mexico":"🇲🇽 México",
+
 "USA":"🇺🇸 Estados Unidos",
 "United States":"🇺🇸 Estados Unidos",
-"Canada":"🇨🇦 Canadá"
 
+"Canada":"🇨🇦 Canadá",
+
+"England":"🏴 Inglaterra",
+"Netherlands":"🇳🇱 Países Bajos",
+"Belgium":"🇧🇪 Bélgica",
+"Croatia":"🇭🇷 Croacia"
 
 };
 
 
 return equipos[nombre.trim()] || nombre;
 
+}
+
+
+
+
+function limpiarHorario(hora){
+
+
+if(!hora) return "Horario";
+
+
+return hora
+.replace("UTC-4","")
+.replace("UTC-3","")
+.replace("UTC-5","")
+.trim();
+
 
 }
+
+
 
 
 
@@ -242,25 +275,48 @@ fetch(fuente+"?v="+Date.now())
 let lista=datos.matches;
 
 
-// BUSCA PARTIDOS DEL 16 DE JUNIO 2026
+
+// FECHA ARGENTINA
+
+let ahora=new Date();
+
+
+let dia=String(ahora.getDate()).padStart(2,"0");
+
+let mes=String(ahora.getMonth()+1).padStart(2,"0");
+
+let anio=ahora.getFullYear();
+
+
+
+let fechaActual =
+anio+"-"+mes+"-"+dia;
+
+
+
 
 let partidosHoy=lista.filter(p=>{
 
 
-return p.date.includes("2026-06-16");
+return p.date.includes(fechaActual);
 
 
 });
 
 
 
-// Si no encuentra muestra próximos
+
+// si no hay hoy muestra próximos
 
 if(partidosHoy.length===0){
 
+
 partidosHoy=lista.slice(0,5);
 
+
 }
+
+
 
 
 
@@ -271,6 +327,7 @@ let html="";
 partidosHoy.forEach(p=>{
 
 
+
 let marcador;
 
 
@@ -278,9 +335,12 @@ let marcador;
 if(p.score && p.score.ft){
 
 
+
 marcador=`
 
 <div class="resultado">
+
+FINAL<br>
 
 ${p.score.ft[0]}
 -
@@ -290,18 +350,23 @@ ${p.score.ft[1]}
 
 `;
 
+
+
 }else{
+
 
 
 marcador=`
 
 <div class="hora">
 
-${p.time || "Horario"}
+${limpiarHorario(p.time)}
 
 </div>
 
 `;
+
+
 
 }
 
@@ -346,6 +411,7 @@ document
 })
 
 
+
 .catch(()=>{
 
 
@@ -356,6 +422,17 @@ document
 "<div class='cargando'>No se pudo cargar el Mundial</div>";
 
 });
+
+
+
+
+// ACTUALIZA SOLO CADA 10 MINUTOS
+
+setInterval(()=>{
+
+location.reload();
+
+},600000);
 
 
 
