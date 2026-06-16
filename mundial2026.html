@@ -4,11 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Widget Mundial FIFA 2026</title>
-
 
 <style>
 
@@ -23,15 +21,14 @@ font-family:Arial,Helvetica,sans-serif;
 
 width:1050px;
 max-width:100%;
-margin:auto;
 
-background:white;
+background:#fff;
 
 border-radius:15px;
 
 overflow:hidden;
 
-box-shadow:0 5px 25px rgba(0,0,0,.25);
+box-shadow:0 5px 20px rgba(0,0,0,.25);
 
 }
 
@@ -41,7 +38,7 @@ box-shadow:0 5px 25px rgba(0,0,0,.25);
 
 height:60px;
 
-background:linear-gradient(90deg,#001f4d,#008cff);
+background:linear-gradient(90deg,#003b7a,#008ee8);
 
 color:white;
 
@@ -53,12 +50,11 @@ justify-content:space-between;
 
 padding:0 25px;
 
-font-size:25px;
+font-size:24px;
 
 font-weight:bold;
 
 }
-
 
 
 .tag{
@@ -67,7 +63,7 @@ background:#ffd700;
 
 color:#003b7a;
 
-padding:7px 15px;
+padding:7px 14px;
 
 border-radius:20px;
 
@@ -76,8 +72,7 @@ font-size:12px;
 }
 
 
-
-.card{
+.match{
 
 display:flex;
 
@@ -85,7 +80,7 @@ justify-content:space-between;
 
 align-items:center;
 
-padding:12px 25px;
+padding:12px 20px;
 
 border-bottom:1px solid #ddd;
 
@@ -108,9 +103,10 @@ line-height:28px;
 .flag{
 
 width:28px;
+
 vertical-align:middle;
 
-margin-right:6px;
+margin-right:5px;
 
 }
 
@@ -134,4 +130,137 @@ border-radius:8px;
 
 background:#198754;
 
-color:white
+color:white;
+
+padding:8px 15px;
+
+border-radius:8px;
+
+font-weight:bold;
+
+}
+
+
+
+.live{
+
+background:#e60000;
+
+color:white;
+
+padding:5px 12px;
+
+border-radius:20px;
+
+font-size:12px;
+
+font-weight:bold;
+
+}
+
+
+
+.next{
+
+background:#eef5ff;
+
+color:#003b7a;
+
+padding:10px;
+
+font-weight:bold;
+
+}
+
+
+
+.loading{
+
+text-align:center;
+
+padding:80px 0;
+
+font-size:20px;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div id="wrapper">
+
+
+<div class="header">
+
+⚽ MUNDIAL FIFA 2026
+
+<div class="tag">
+ACTUALIZADO
+</div>
+
+</div>
+
+
+<div id="content">
+
+<div class="loading">
+Cargando partidos...
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<script>
+
+
+const fuente =
+"https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json";
+
+
+
+const nombres={
+
+
+"France":"🇫🇷 Francia",
+"Senegal":"🇸🇳 Senegal",
+
+"Iraq":"🇮🇶 Irak",
+"Iran":"🇮🇷 Irán",
+"Norway":"🇳🇴 Noruega",
+
+"Argentina":"🇦🇷 Argentina",
+"Algeria":"🇩🇿 Argelia",
+
+"Brazil":"🇧🇷 Brasil",
+"Morocco":"🇲🇦 Marruecos",
+
+"Spain":"🇪🇸 España",
+"Germany":"🇩🇪 Alemania",
+
+"Portugal":"🇵🇹 Portugal",
+
+"Mexico":"🇲🇽 México",
+
+"USA":"🇺🇸 Estados Unidos",
+
+"Canada":"🇨🇦 Canadá"
+
+};
+
+
+
+const banderas={
+
+"Argentina":"ar",
+"France":"fr",
+"Brazil":"br
