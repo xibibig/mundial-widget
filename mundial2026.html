@@ -32,7 +32,6 @@ box-shadow:0 4px 18px rgba(0,0,0,.25);
 }
 
 
-
 .cabecera{
 
 height:55px;
@@ -56,7 +55,6 @@ font-weight:bold;
 }
 
 
-
 .estado{
 
 background:#ffd700;
@@ -70,7 +68,6 @@ padding:7px 14px;
 border-radius:20px;
 
 }
-
 
 
 .partido{
@@ -92,13 +89,9 @@ font-size:17px;
 }
 
 
-
 .equipos{
-
 font-weight:bold;
-
 }
-
 
 
 .hora{
@@ -114,7 +107,6 @@ border-radius:8px;
 }
 
 
-
 .resultado{
 
 background:#198754;
@@ -128,7 +120,6 @@ border-radius:8px;
 }
 
 
-
 .cargando{
 
 text-align:center;
@@ -138,7 +129,6 @@ padding-top:70px;
 font-size:20px;
 
 }
-
 
 </style>
 
@@ -158,7 +148,7 @@ font-size:20px;
 
 <div class="estado">
 
-FIXTURE OFICIAL
+ACTUALIZADO
 
 </div>
 
@@ -182,6 +172,7 @@ Cargando partidos...
 
 
 
+
 <script>
 
 
@@ -189,40 +180,53 @@ const fuente =
 "https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026/worldcup.json";
 
 
-// Traducción de equipos
+
+
+// Traducción equipos
 
 function traducir(nombre){
 
 
 const equipos={
 
-"France":"Francia",
-"Senegal":"Senegal",
-"Iraq":"Irak",
-"Iran":"Irán",
-"Norway":"Noruega",
-"Argentina":"Argentina",
-"Algeria":"Argelia",
-"Brazil":"Brasil",
-"Morocco":"Marruecos",
-"Spain":"España",
-"Cape Verde":"Cabo Verde",
-"Austria":"Austria",
-"Jordan":"Jordania",
-"Germany":"Alemania",
-"Italy":"Italia",
-"Portugal":"Portugal",
-"Mexico":"México",
-"USA":"Estados Unidos",
-"Canada":"Canadá"
+
+"France":"🇫🇷 Francia",
+"Senegal":"🇸🇳 Senegal",
+
+"Iraq":"🇮🇶 Irak",
+"Iran":"🇮🇷 Irán",
+"Norway":"🇳🇴 Noruega",
+
+"Argentina":"🇦🇷 Argentina",
+"Algeria":"🇩🇿 Argelia",
+
+"Brazil":"🇧🇷 Brasil",
+"Morocco":"🇲🇦 Marruecos",
+
+"Spain":"🇪🇸 España",
+"Cape Verde":"🇨🇻 Cabo Verde",
+
+"Austria":"🇦🇹 Austria",
+"Jordan":"🇯🇴 Jordania",
+
+"Germany":"🇩🇪 Alemania",
+"Italy":"🇮🇹 Italia",
+"Portugal":"🇵🇹 Portugal",
+
+"Mexico":"🇲🇽 México",
+"USA":"🇺🇸 Estados Unidos",
+"United States":"🇺🇸 Estados Unidos",
+"Canada":"🇨🇦 Canadá"
+
 
 };
 
 
-return equipos[nombre] || nombre;
+return equipos[nombre.trim()] || nombre;
 
 
 }
+
 
 
 
@@ -238,29 +242,19 @@ fetch(fuente+"?v="+Date.now())
 let lista=datos.matches;
 
 
-// fecha actual
-
-let hoy=new Date();
-
+// BUSCA PARTIDOS DEL 16 DE JUNIO 2026
 
 let partidosHoy=lista.filter(p=>{
 
 
-let fecha=new Date(p.date);
-
-
-return fecha.getDate()==hoy.getDate()
-&&
-fecha.getMonth()==hoy.getMonth()
-&&
-fecha.getFullYear()==hoy.getFullYear();
+return p.date.includes("2026-06-16");
 
 
 });
 
 
 
-// si no encuentra hoy muestra próximos
+// Si no encuentra muestra próximos
 
 if(partidosHoy.length===0){
 
@@ -284,9 +278,7 @@ let marcador;
 if(p.score && p.score.ft){
 
 
-marcador=
-
-`
+marcador=`
 
 <div class="resultado">
 
@@ -298,13 +290,10 @@ ${p.score.ft[1]}
 
 `;
 
-
 }else{
 
 
-marcador=
-
-`
+marcador=`
 
 <div class="hora">
 
@@ -315,6 +304,7 @@ ${p.time || "Horario"}
 `;
 
 }
+
 
 
 
